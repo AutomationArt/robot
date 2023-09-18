@@ -32,6 +32,9 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include <math.h>
+#define FREQ 72000000
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
