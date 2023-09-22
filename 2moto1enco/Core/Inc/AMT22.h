@@ -13,8 +13,9 @@
 
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal.h"
-// #include "stm32f1xx_hal_spi.h"
+#include "stm32f1xx_hal_spi.h"
 #include "stm32f1xx_hal_tim.h"
+#include "DWT_Delay.h"
 
 float calculateAngle(uint16_t encoderValue, uint8_t bitDepth);
 void setCSLine (GPIO_TypeDef* encoderPort, uint16_t encoderPin, GPIO_PinState csLine);

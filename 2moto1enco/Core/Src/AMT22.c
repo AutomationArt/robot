@@ -96,13 +96,17 @@ void resetAMT22(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 
 //блокуючий хуйовий метод, треба через неблокуючий мабуть
 void delay(TIM_HandleTypeDef *timer, uint32_t delayTime) {
-	__HAL_RCC_TIM2_CLK_ENABLE();
-	HAL_TIM_Base_Start(timer);
-	uint32_t start_time = __HAL_TIM_GET_COUNTER(timer);
-	while ((__HAL_TIM_GET_COUNTER(timer) - start_time) < delayTime) {
-		// wait suka
-	}
-	HAL_TIM_Base_Stop(timer);
-	__HAL_RCC_TIM2_CLK_DISABLE();
+
+	DWT_Delay_ms(delayTime);
+
+//
+//	__HAL_RCC_TIM2_CLK_ENABLE();
+//	HAL_TIM_Base_Start(timer);
+//	uint32_t start_time = __HAL_TIM_GET_COUNTER(timer);
+//	while ((__HAL_TIM_GET_COUNTER(timer) - start_time) < delayTime) {
+//		// wait suka
+//	}
+//	HAL_TIM_Base_Stop(timer);
+//	__HAL_RCC_TIM2_CLK_DISABLE();
 }
 

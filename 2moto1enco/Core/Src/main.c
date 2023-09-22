@@ -69,28 +69,28 @@ int cntImpulse1 = 0, cntImpulse2 = 0, step1=0, step2=0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) /*CallBack, вызванный при окончании периода Ш�?М*/
 {
-//	if (htim->Instance == TIM1)/*Проверяем от какого таймера пришёл CallBack тут надо проверить точность*/
-//	{
-//		++cntImpulse1;
-//
-//		if (cntImpulse1 >= step1) {
-//		//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
-//			HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
-//			HAL_TIM_Base_Stop_IT(&htim1);
-//		//	HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
-//		}
-//
-//	} else if (htim->Instance == TIM2) {
-//
-//		++cntImpulse2;
-//		HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
-//		if (cntImpulse2 >= step2) {
-//		//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
-//			HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-//			HAL_TIM_Base_Stop_IT(&htim2);
-//
-//		}
-//	}
+	if (htim->Instance == TIM1)/*Проверяем от какого таймера пришёл CallBack тут надо проверить точность*/
+	{
+		++cntImpulse1;
+
+		if (cntImpulse1 >= step1) {
+		//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
+			HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
+			HAL_TIM_Base_Stop_IT(&htim1);
+		//	HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
+		}
+
+	} else if (htim->Instance == TIM2) {
+
+		++cntImpulse2;
+		//HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
+		if (cntImpulse2 >= step2) {
+		//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
+			HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
+			HAL_TIM_Base_Stop_IT(&htim2);
+
+		}
+	}
 }
 
 int steppingyakkazavmaxim(float stepM1, float stepM2) {
@@ -188,6 +188,7 @@ int main(void)
   MX_TIM3_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  DWT_Delay_Init();
 
   HAL_TIM_Base_Init(&htim1);
   HAL_TIM_Base_Init(&htim2);
@@ -200,16 +201,16 @@ int main(void)
   float angle = 0;
 
   	HAL_Delay(300); //при старте 200 милисек не хотел ебать?
-//  	posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 14, &htim3);
+ 	posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 14, &htim3);
   //	resetAMT22(&hspi1, CS_GPIO_Port, CS_Pin, &htim3);
- // 	setZeroSPI(&hspi1, CS_GPIO_Port, CS_Pin, &htim3); //воно само зчитає поточну позицію и засейвить її в пам'ять
+  	setZeroSPI(&hspi1, CS_GPIO_Port, CS_Pin, &htim3); //воно само зчитає поточну позицію и засейвить її в пам'ять
   	HAL_Delay(250);  //250   мілісек після встановлення нуля полюбасу
 
   	HAL_GPIO_WritePin(En_GPIO_Port,En_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(Dir_GPIO_Port,Dir_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(Dir2_GPIO_Port,Dir2_Pin, GPIO_PIN_SET);
 
-    steppingyakkazavmaxim(10000, 20000);
+    steppingyakkazavmaxim(4534, 10300);
 
   /* USER CODE END 2 */
 
@@ -217,8 +218,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1) {
 
-//	  posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 14, &htim3);
-//	  angle = calculateAngle(posnow, 14); //або 14
+	  posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 14, &htim3);
+	  angle = calculateAngle(posnow, 14); //або 14
 
 //	  sprintf(buf, "%hu\n", posnow);
 //	  HAL_UART_Transmit(&huart1, (uint8_t *)buf, sizeof(buf),0xFFFF);
