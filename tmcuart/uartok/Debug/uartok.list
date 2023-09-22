@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00017f0c  00000000  00000000  0002f438  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000a2b3  00000000  00000000  00047344  2**0
+ 18 .debug_line   0000a2af  00000000  00000000  00047344  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00080f78  00000000  00000000  000515f7  2**0
+ 19 .debug_str    00080f85  00000000  00000000  000515f3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00002594  00000000  00000000  000d2570  2**2
+ 20 .debug_frame  00002594  00000000  00000000  000d2578  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000058  00000000  00000000  000d4b04  2**0
+ 21 .debug_line_str 00000065  00000000  00000000  000d4b0c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1606,7 +1606,6 @@ int main(void)
  8000ab8:	4603      	mov	r3, r0
  8000aba:	f887 302a 	strb.w	r3, [r7, #42]	; 0x2a
 //		TMC2209::Settings settings = tmcd.getSettings();
-
 		if (communication) {
  8000abe:	f897 302b 	ldrb.w	r3, [r7, #43]	; 0x2b
  8000ac2:	2b00      	cmp	r3, #0
@@ -1635,7 +1634,6 @@ int main(void)
  8000aea:	f44f 5100 	mov.w	r1, #8192	; 0x2000
  8000aee:	4806      	ldr	r0, [pc, #24]	; (8000b08 <main+0xd8>)
  8000af0:	f000 fdc4 	bl	800167c <HAL_GPIO_TogglePin>
-
 		DWT_Delay_ms(500);
  8000af4:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  8000af8:	f7ff ff70 	bl	80009dc <DWT_Delay_ms>
