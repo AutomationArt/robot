@@ -29,13 +29,21 @@
 #include "stm32f1xx_hal_tim.h"
 #include "DWT_Delay.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 float calculateAngle(uint16_t encoderValue, uint8_t bitDepth);
-void setCSLine (GPIO_TypeDef* encoderPort, uint16_t encoderPin, GPIO_PinState csLine);
+void setCSLine (GPIO_TypeDef *encoderPort, uint16_t encoderPin, GPIO_PinState csLine);
 uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte, GPIO_TypeDef* encoderPort, uint16_t encoderPin, uint8_t releaseLine);
-uint16_t getPositionSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef* encoderPort, uint16_t encoderPin, uint8_t resolution);
+uint16_t getPositionSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,	uint16_t encoderPin, uint8_t resolution);
 void setZeroSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef* encoderPort, uint16_t encoderPin);
 void resetAMT22(SPI_HandleTypeDef *hspi, GPIO_TypeDef* encoderPort, uint16_t encoderPin);
 void delay(uint32_t delayTime);
+
+#ifdef __cplusplus
+}
+#endif
+
+
 #endif /* SRC_AMT22_H_ */

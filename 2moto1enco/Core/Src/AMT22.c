@@ -1,10 +1,10 @@
 #include "AMT22.h"
 
 
-
 void setCSLine(GPIO_TypeDef *encoderPort, uint16_t encoderPin,
 		GPIO_PinState csLine) {
 	HAL_GPIO_WritePin(encoderPort, encoderPin, csLine);
+
 }
 
 uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte,

@@ -24,8 +24,20 @@ class RoboArm
 {
 public:
 
-	uint8_t ResolutionEncoders;
+	uint8_t ResolutionEncoders=12;
 	float linearStepsMil=(spoolStep*(motorStep*drvMicroSteps))/(beltRatio*360);
+	//Settings for motors
+	TIM_HandleTypeDef htim1M1;
+	TIM_HandleTypeDef htim2M2;
+
+	//ENCODERS
+	SPI_HandleTypeDef *arm_hspi1;
+	uint16_t CS_Pin_Enc1;
+	GPIO_TypeDef *CS_GPIO_Port_Enc1;
+	uint16_t CS_Pin_Enc2;
+	GPIO_TypeDef *CS_GPIO_Port_Enc2;
+	uint32_t posNowEnc1, posNowEnc2;
+
 
 	RoboArm();
 
@@ -40,10 +52,10 @@ public:
 	int MoveMotors();
 
 	// Функции for encoders
-	int SetSettEncoders(SPI_HandleTypeDef arm_hspi1,
-				GPIO_TypeDef *CS_GPIO_Port_Enc1,
-				uint16_t CS_Pin_Enc1, GPIO_TypeDef *CS_GPIO_Port_Enc2,
-				uint16_t CS_Pin_Enc2, uint8_t ResolutionEncoders);
+	int SetSettEncoders(SPI_HandleTypeDef &arm_hspi1T,
+			GPIO_TypeDef *CS_GPIO_Port_Enc1T, uint16_t CS_Pin_Enc1T,
+			GPIO_TypeDef *CS_GPIO_Port_Enc2T, uint16_t CS_Pin_Enc2T,
+			uint8_t ResolutionEncodersT);
 	uint32_t GetPosEncoders(uint8_t); //1 or 2
 	int SetZeroEncoders();
 	float GetAngleEncoders(uint32_t);
@@ -55,7 +67,7 @@ public:
 
 	// Функция екстренный стоп
 	int EmergencyStop();
-	int SetSettMotors(TIM_HandleTypeDef *htim1, TIM_HandleTypeDef *htim2);
+	int SetSettMotors(TIM_HandleTypeDef &htim1, TIM_HandleTypeDef &htim2);
 
 	int saveDatatoFlash();
 	int readDataonFlash();
@@ -65,19 +77,6 @@ private:
 
 
 	//essence
-
-	//Settings for motors
-	TIM_HandleTypeDef *htim1M1;
-	TIM_HandleTypeDef *htim2M2;
-
-	//ENCODERS
-	SPI_HandleTypeDef arm_hspi1;
-	uint16_t CS_Pin_Enc1;
-	GPIO_TypeDef *CS_GPIO_Port_Enc1;
-	uint16_t CS_Pin_Enc2;
-	GPIO_TypeDef *CS_GPIO_Port_Enc2;
-	uint32_t posNowEnc1, posNowEnc2;
-
 
 
 

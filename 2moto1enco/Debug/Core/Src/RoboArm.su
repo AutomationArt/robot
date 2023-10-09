@@ -5,12 +5,12 @@ C:\ST\STM32CubeIDE_1.11.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Src/RoboArm.cpp:23:5:int RoboArm::EmergencyStop()	16	static
 ../Core/Src/RoboArm.cpp:27:5:int RoboArm::setMoveLinear(uint16_t)	16	static
 ../Core/Src/RoboArm.cpp:32:5:int RoboArm::setMove(uint16_t, uint16_t, bool)	64	static
-../Core/Src/RoboArm.cpp:99:5:int RoboArm::MoveMotors()	16	static
-../Core/Src/RoboArm.cpp:103:5:int RoboArm::OpenGripper()	16	static
-../Core/Src/RoboArm.cpp:107:5:int RoboArm::PrintStatus()	16	static
-../Core/Src/RoboArm.cpp:111:5:int RoboArm::SetSettEncoders(SPI_HandleTypeDef, GPIO_TypeDef*, uint16_t, GPIO_TypeDef*, uint16_t, uint8_t)	16	static
-../Core/Src/RoboArm.cpp:124:7:float RoboArm::GetAngleEncoders(uint32_t)	24	static
-../Core/Src/RoboArm.cpp:133:10:uint32_t RoboArm::GetPosEncoders(uint8_t)	16	static
-../Core/Src/RoboArm.cpp:152:5:int RoboArm::SetZeroEncoders()	16	static
-../Core/Src/RoboArm.cpp:164:5:int RoboArm::SetSettMotors(TIM_HandleTypeDef*, TIM_HandleTypeDef*)	24	static
-../Core/Src/RoboArm.cpp:172:5:int RoboArm::Turn(int)	16	static
+../Core/Src/RoboArm.cpp:97:5:int RoboArm::MoveMotors()	16	static
+../Core/Src/RoboArm.cpp:101:5:int RoboArm::OpenGripper()	16	static
+../Core/Src/RoboArm.cpp:105:5:int RoboArm::PrintStatus()	16	static
+../Core/Src/RoboArm.cpp:109:5:int RoboArm::SetSettEncoders(SPI_HandleTypeDef&, GPIO_TypeDef*, uint16_t, GPIO_TypeDef*, uint16_t, uint8_t)	24	static
+../Core/Src/RoboArm.cpp:123:7:float RoboArm::GetAngleEncoders(uint32_t)	24	static
+../Core/Src/RoboArm.cpp:132:10:uint32_t RoboArm::GetPosEncoders(uint8_t)	16	static
+../Core/Src/RoboArm.cpp:151:5:int RoboArm::SetZeroEncoders()	16	static
+../Core/Src/RoboArm.cpp:162:5:int RoboArm::SetSettMotors(TIM_HandleTypeDef&, TIM_HandleTypeDef&)	24	static
+../Core/Src/RoboArm.cpp:168:5:int RoboArm::Turn(int)	16	static
