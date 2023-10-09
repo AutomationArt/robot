@@ -124,11 +124,11 @@ int main(void)
 //		}
 //		HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
 //
-//		communication = tmcd.isCommunicating();
+		communication = tmcd.isCommunicating();
 //		bool issetup=tmcd.isSetupAndCommunicating();
 //		bool isnotsetup=tmcd.isCommunicatingButNotSetup();
 		uint8_t version=tmcd.getVersion();
-//		TMC2209::Settings settings = tmcd.getSettings();
+		TMC2209::Settings settings = tmcd.getSettings();
 		if (communication) {
 			for(int i=0; i<=20; i++){
 				HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);

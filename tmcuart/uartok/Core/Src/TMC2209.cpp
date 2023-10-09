@@ -7,7 +7,7 @@
 
 TMC2209::TMC2209() {
 	serial_baud_rate_ = 115200;
-	serial_address_ = SERIAL_ADDRESS_3;
+	serial_address_ = SERIAL_ADDRESS_0;
 	hardware_enable_pin_ = -1;
 	cool_step_enabled_ = false;
 }

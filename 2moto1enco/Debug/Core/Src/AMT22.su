@@ -1,8 +1,8 @@
 ../Core/Inc/DWT_Delay.h:27:22:DWT_Delay_ms	24	static
-../Core/Src/AMT22.c:16:6:setCSLine	16	static
-../Core/Src/AMT22.c:21:9:spiWriteRead	40	static
-../Core/Src/AMT22.c:33:10:getPositionSPI	56	static
-../Core/Src/AMT22.c:63:6:setZeroSPI	32	static
-../Core/Src/AMT22.c:73:7:calculateAngle	24	static
-../Core/Src/AMT22.c:88:6:resetAMT22	32	static
-../Core/Src/AMT22.c:98:6:delay	16	static
+../Core/Src/AMT22.c:5:6:setCSLine	16	static
+../Core/Src/AMT22.c:10:9:spiWriteRead	40	static
+../Core/Src/AMT22.c:21:10:getPositionSPI	56	static
+../Core/Src/AMT22.c:49:6:setZeroSPI	32	static
+../Core/Src/AMT22.c:59:7:calculateAngle	24	static
+../Core/Src/AMT22.c:74:6:resetAMT22	32	static
+../Core/Src/AMT22.c:84:6:delay	16	static

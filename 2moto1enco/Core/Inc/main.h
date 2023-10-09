@@ -34,7 +34,8 @@ extern "C" {
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-#include "DWT_Delay.h"
+#include <stdbool.h>
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -73,6 +74,8 @@ void Error_Handler(void);
 #define Dir_GPIO_Port GPIOA
 #define CS_Pin GPIO_PIN_0
 #define CS_GPIO_Port GPIOB
+#define CS2_Pin GPIO_PIN_1
+#define CS2_GPIO_Port GPIOB
 #define Dir2_Pin GPIO_PIN_10
 #define Dir2_GPIO_Port GPIOB
 

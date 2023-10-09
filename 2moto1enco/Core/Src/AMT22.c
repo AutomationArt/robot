@@ -1,17 +1,6 @@
 #include "AMT22.h"
 
-#define AMT22_NOP       0x00
-#define AMT22_RESET     0x60
-#define AMT22_ZERO      0x70
 
-#define RES12           12
-#define RES14           14
-
-#define docDelay  3
-#define docDelayLong 60 //min 40
-
-#define ENCODER_RESOLUTION_12_BIT 4096
-#define ENCODER_RESOLUTION_14_BIT 16384
 
 void setCSLine(GPIO_TypeDef *encoderPort, uint16_t encoderPin,
 		GPIO_PinState csLine) {
@@ -19,26 +8,23 @@ void setCSLine(GPIO_TypeDef *encoderPort, uint16_t encoderPin,
 }
 
 uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte,
-		GPIO_TypeDef *encoderPort, uint16_t encoderPin, uint8_t releaseLine,
-		TIM_HandleTypeDef *timer) {
+		GPIO_TypeDef *encoderPort, uint16_t encoderPin, uint8_t releaseLine) {
 	uint8_t data;
 	setCSLine(encoderPort, encoderPin, GPIO_PIN_RESET);
-	delay(timer, docDelay);
+	delay(docDelay);
 	HAL_SPI_TransmitReceive(hspi, &sendByte, &data, 1, 10);
-	delay(timer, docDelay);
+	delay(docDelay);
 	setCSLine(encoderPort, encoderPin, releaseLine);
 	return data;
 }
 
 uint16_t getPositionSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
-		uint16_t encoderPin, uint8_t resolution, TIM_HandleTypeDef *timer) {
+		uint16_t encoderPin, uint8_t resolution) {
 	uint16_t currentPosition = 0;
 	uint8_t binaryArray[16];
-	currentPosition = spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 0,
-			timer) << 8;
-	delay(timer, docDelay);
-	currentPosition |= spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 1,
-			timer);
+	currentPosition = spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 0) << 8;
+	delay(docDelay);
+	currentPosition |= spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 1);
 	for (int i = 0; i < 16; i++)
 		binaryArray[i] = (0x01) & (currentPosition >> (i));
 	if ((binaryArray[15]
@@ -61,12 +47,12 @@ uint16_t getPositionSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 }
 
 void setZeroSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
-		uint16_t encoderPin, TIM_HandleTypeDef *timer) {
+		uint16_t encoderPin) {
 
-	spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 0, timer);
-	delay(timer, docDelay);
-	spiWriteRead(hspi, AMT22_ZERO, encoderPort, encoderPin, 1, timer);
-	delay(timer, docDelayLong + docDelayLong);
+	spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 0);
+	delay( docDelay);
+	spiWriteRead(hspi, AMT22_ZERO, encoderPort, encoderPin, 1);
+	delay( docDelayLong + docDelayLong);
 
 }
 
@@ -86,16 +72,16 @@ float calculateAngle(uint16_t encoderValue, uint8_t bitDepth) {
 }
 
 void resetAMT22(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
-		uint16_t encoderPin, TIM_HandleTypeDef *timer) {
+		uint16_t encoderPin) {
 	spiWriteRead((SPI_HandleTypeDef*) &hspi, AMT22_NOP, encoderPort, encoderPin,
-			0, timer);
-	delay(timer, docDelay);
-	spiWriteRead((SPI_HandleTypeDef*) &hspi, AMT22_RESET, encoderPort,	encoderPin, 1, timer);
-	delay(timer, docDelayLong);
+			0);
+	delay(docDelay);
+	spiWriteRead((SPI_HandleTypeDef*) &hspi, AMT22_RESET, encoderPort,	encoderPin, 1);
+	delay(docDelayLong);
 }
 
 //блокуючий хуйовий метод, треба через неблокуючий мабуть
-void delay(TIM_HandleTypeDef *timer, uint32_t delayTime) {
+void delay(uint32_t delayTime) {
 
 	DWT_Delay_ms(delayTime);
 
