@@ -2,17 +2,17 @@ C:\ST\STM32CubeIDE_1.11.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Src/main.cpp:94:5:int steppingyaktreba(float, float)	1
 ../Core/Src/main.cpp:99:5:int steppingyakkazavmaxim(float, float)	3
 ../Core/Src/main.cpp:167:5:int main()	1
-../Core/Src/main.cpp:283:6:void SystemClock_Config()	3
-../Core/Src/main.cpp:324:13:void MX_SPI1_Init()	2
-../Core/Src/main.cpp:360:13:void MX_TIM1_Init()	5
-../Core/Src/main.cpp:423:13:void MX_TIM2_Init()	4
-../Core/Src/main.cpp:470:13:void MX_USART1_UART_Init()	2
-../Core/Src/main.cpp:501:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:549:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	1
-../Core/Src/main.cpp:577:6:void StartDefaultTask(const void*)	1
-../Core/Src/main.cpp:600:6:void StartAMT22Data(const void*)	1
-../Core/Src/main.cpp:647:6:void StartUARTData(const void*)	1
-../Core/Src/main.cpp:668:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	6
-../Core/Src/main.cpp:707:6:void Error_Handler()	1
-../Core/Src/main.cpp:714:1:void __static_initialization_and_destruction_0(int, int)	3
-../Core/Src/main.cpp:714:1:cpp)	1
+../Core/Src/main.cpp:281:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:322:13:void MX_SPI1_Init()	2
+../Core/Src/main.cpp:358:13:void MX_TIM1_Init()	5
+../Core/Src/main.cpp:421:13:void MX_TIM2_Init()	4
+../Core/Src/main.cpp:468:13:void MX_USART1_UART_Init()	2
+../Core/Src/main.cpp:499:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:547:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	3
+../Core/Src/main.cpp:582:6:void StartDefaultTask(const void*)	1
+../Core/Src/main.cpp:599:6:void StartAMT22Data(const void*)	1
+../Core/Src/main.cpp:617:6:void StartUARTData(const void*)	2
+../Core/Src/main.cpp:658:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	6
+../Core/Src/main.cpp:697:6:void Error_Handler()	1
+../Core/Src/main.cpp:704:1:void __static_initialization_and_destruction_0(int, int)	3
+../Core/Src/main.cpp:704:1:cpp)	1

@@ -7,6 +7,7 @@ void setCSLine(GPIO_TypeDef *encoderPort, uint16_t encoderPin,
 
 }
 
+
 uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte,
 		GPIO_TypeDef *encoderPort, uint16_t encoderPin, uint8_t releaseLine) {
 	uint8_t data;
@@ -20,6 +21,9 @@ uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte,
 
 uint16_t getPositionSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 		uint16_t encoderPin, uint8_t resolution) {
+
+	DWT_Delay_Init();
+
 	uint16_t currentPosition = 0;
 	uint8_t binaryArray[16];
 	currentPosition = spiWriteRead(hspi, AMT22_NOP, encoderPort, encoderPin, 0) << 8;
@@ -58,16 +62,14 @@ void setZeroSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 
 float calculateAngle(uint16_t encoderValue, uint8_t bitDepth) {
 	float angle = 0.0;
-
 	if (bitDepth == 12) {
-		angle = ((float) encoderValue / ENCODER_RESOLUTION_12_BIT) * 360.0;
+		angle = ((float) encoderValue * 360)/ ENCODER_RESOLUTION_12_BIT;
 	} else if (bitDepth == 14) {
-		angle = ((float) encoderValue / ENCODER_RESOLUTION_14_BIT) * 360.0;
+		angle = ((float) encoderValue * 360)/ ENCODER_RESOLUTION_14_BIT;
 	}
 
 	// до 0.2 градусів за документацією
-	angle = roundf(angle * 5.0) / 5.0;
-
+	angle = roundf(angle * 100.0) / 100.0;
 	return angle;
 }
 
@@ -94,5 +96,11 @@ void delay(uint32_t delayTime) {
 //	}
 //	HAL_TIM_Base_Stop(timer);
 //	__HAL_RCC_TIM2_CLK_DISABLE();
+}
+
+int startDWT(){
+
+	 DWT_Delay_Init();
+
 }
 

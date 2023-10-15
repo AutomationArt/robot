@@ -8,7 +8,7 @@
 #define AMT22_H_
 
 #include "stdint.h"
-
+#include "DWT_Delay.h"
 #define 	STM32F1
 #define AMT22_NOP       0x00
 #define AMT22_RESET     0x60
@@ -28,11 +28,13 @@
 #include "stm32f1xx_hal_spi.h"
 #include "stm32f1xx_hal_tim.h"
 #include "DWT_Delay.h"
+#include "math.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+int startDWT();
 float calculateAngle(uint16_t encoderValue, uint8_t bitDepth);
 void setCSLine (GPIO_TypeDef *encoderPort, uint16_t encoderPin, GPIO_PinState csLine);
 uint8_t spiWriteRead(SPI_HandleTypeDef *hspi, uint8_t sendByte, GPIO_TypeDef* encoderPort, uint16_t encoderPin, uint8_t releaseLine);

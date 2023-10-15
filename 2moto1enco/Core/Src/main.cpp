@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "AMT22.h"
 #include "RoboArm.h"
+#include "TMC2209.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +57,7 @@ osThreadId myUARTTaskHandle;
 
 uint8_t rx_index = 0;
 uint8_t rx_data[20];
-uint8_t rx_buffer[20];
+uint8_t rx_buffer[9];
 uint8_t transfer_cplt = 0;
 
 bool flagReadEnc = 0;
@@ -90,7 +91,7 @@ void StartUARTData(void const *argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-int cntImpulse1 = 0, cntImpulse2 = 0, step1 = 0, step2 = 0;
+uint32_t cntImpulse1 = 0, cntImpulse2 = 0, step1 = 0, step2 = 0;
 int steppingyaktreba(float stepM1, float stepM2) {
 
 	return 0;
@@ -156,7 +157,7 @@ int steppingyakkazavmaxim(float stepM1, float stepM2) {
 	return 0;
 }
 
-RoboArm arm1;
+RoboArm arm(120, 124);
 
 /* USER CODE END 0 */
 
@@ -193,16 +194,17 @@ int main(void) {
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
 
-
-
-	char buf[4];
-	char bufAngle[8];
-	uint16_t posnow = 0;
-	float angle = 0;
-
-	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(Dir_GPIO_Port, Dir_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(Dir2_GPIO_Port, Dir2_Pin, GPIO_PIN_SET);
+
+	HAL_TIM_Base_Init(&htim1);
+	HAL_TIM_Base_Init(&htim2);
+
+	arm.SetSettMotors(htim1, htim2, Dir_GPIO_Port, Dir_Pin, Dir2_GPIO_Port,
+			Dir_Pin, En_GPIO_Port, En_Pin, En2_GPIO_Port, En2_Pin);
+	arm.SetSettEncoders(hspi1, CS_GPIO_Port, CS_Pin, CS2_GPIO_Port, CS2_Pin,
+			14);
+	arm.SetZeroEncoders();
 
 	//steppingyakkazavmaxim(15000, 12000);
 
@@ -247,8 +249,6 @@ int main(void) {
 	/* We should never get here as control is now taken by the scheduler */
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-
-	//	arm1.setMove(120,200,false);
 
 	while (1) {
 
@@ -546,22 +546,29 @@ static void MX_GPIO_Init(void) {
 /* USER CODE BEGIN 4 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	UNUSED(huart);
-//	if (huart == &huart1) {
-//		//		HAL_UART_Transmit(&huart1, rx_buffer, sizeof(rx_buffer), 200);
-//		if (rx_buffer[0] == 1) {
-//			flagReadEnc = 1;
-//			steppingyakkazavmaxim(5000, 10000);
+	//UNUSED(huart);
+
+	if (huart == &huart1) {
+
+//		if(!strcmp(rx_buffer,"TEXT")) {
+//
 //		}
-//		for (int i = 0; i <= sizeof(rx_buffer); i++) {
-//			rx_buffer[i] = 0;
-//		}
-////	} else {
-////
-////		HAL_UART_Transmit(&huart1,"NO EBAT", 6, HAL_MAX_DELAY);
-////	}
-//		HAL_UART_Receive_IT(&huart1, rx_buffer, sizeof(rx_buffer));
-//	}
+
+		if (rx_buffer[0] == '1') {
+
+			uint32_t recAngle = ((rx_buffer[1] - '0') * 100)
+					+ ((rx_buffer[2] - '0') * 10) + (rx_buffer[3] - '0');
+			uint32_t recDist = ((rx_buffer[4] - '0') * 100)
+					+ ((rx_buffer[5] - '0') * 10) + (rx_buffer[6] - '0');
+			HAL_UART_Transmit_IT(&huart1, rx_buffer, 8);
+
+			//	HAL_UART_Transmit_IT(&huart1,reinterpret_cast<uint8_t *>(recDist), sizeof(recDist));
+			arm.setMove(recAngle, recDist, false);
+		}
+
+		memset(rx_buffer, 0, sizeof(rx_buffer));
+	}
+	HAL_UART_Receive_IT(&huart1, rx_buffer, sizeof(rx_buffer));
 }
 
 /* USER CODE END 4 */
@@ -576,18 +583,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 void StartDefaultTask(void const *argument) {
 	/* USER CODE BEGIN 5 */
 
-	HAL_TIM_Base_Init(&htim1);
-	HAL_TIM_Base_Init(&htim2);
-
-	arm1.SetSettMotors(htim1, htim2);
-	arm1.SetSettEncoders(hspi1, CS_GPIO_Port, CS_Pin, CS2_GPIO_Port, CS2_Pin,
-			14);
-	arm1.SetZeroEncoders();
-	arm1.setMove(120,9000,true);
-
 	/* Infinite loop */
 	for (;;) {
-
 		osDelay(1);
 	}
 	/* USER CODE END 5 */
@@ -602,40 +599,11 @@ void StartDefaultTask(void const *argument) {
 /* USER CODE END Header_StartAMT22Data */
 void StartAMT22Data(void const *argument) {
 	/* USER CODE BEGIN StartAMT22Data */
-	uint32_t posnow;
-	uint32_t angle;
-	flagReadEnc = 1;
+
 	/* Infinite loop */
 	for (;;) {
 
-		posnow = arm1.GetPosEncoders(1);
-		angle = arm1.GetAngleEncoders(1);
-		char str[60];
-		sprintf(str, "posnow: %d, angle: %d\n", posnow, angle);
-
-		HAL_UART_Transmit(&huart1, reinterpret_cast<const uint8_t*>(str),
-				strlen(str), HAL_MAX_DELAY);
-
-//		if (flagReadEnc) {
-//			uint32_t posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 14,
-//					&htim2);
-//			uint32_t angle = calculateAngle(posnow, 14); //або 14
-//
-//			uint32_t posnow2 = getPositionSPI(&hspi1, CS2_GPIO_Port, CS2_Pin, 14,
-//					&htim2);
-//			uint32_t angle2 = calculateAngle(posnow, 14); //або 14
-//
-//
-//			// Преобразуем переменные в строку
-//			char str2[40];
-//			sprintf(str2, "2- posnow2: %d, angle2: %d\n", posnow2, angle2);
-//
-//			// Отправляем строку через HAL_UART_Transmit()
-//			HAL_UART_Transmit(&huart1, str2, strlen(str2), HAL_MAX_DELAY);
-//
-//		}
-
-		osDelay(500);
+		osDelay(50);
 	}
 	/* USER CODE END StartAMT22Data */
 }
@@ -649,13 +617,33 @@ void StartAMT22Data(void const *argument) {
 /* USER CODE END Header_StartUARTData */
 void StartUARTData(void const *argument) {
 	/* USER CODE BEGIN StartUARTData */
-
+	HAL_UART_Receive_IT(&huart1, rx_buffer, sizeof(rx_buffer));
+	uint32_t posnowT;
+	uint32_t angleT = 0;
+	flagReadEnc = 1;
 	/* Infinite loop */
 	for (;;) {
 
-		HAL_UART_Receive_IT(&huart1, rx_buffer, sizeof(rx_buffer));
+		if (arm.getPrintState()) {
 
-		osDelay(1);
+			char str[40];
+			posnowT = arm.GetPosEncoders(1);
+			angleT = arm.GetAngleEncoders(posnowT) * 100;
+			sprintf(str, "x: %d = %d \n", posnowT, angleT);
+			HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(str),
+					strlen(str),
+					HAL_MAX_DELAY);
+
+			posnowT = arm.GetPosEncoders(2);
+			angleT = arm.GetAngleEncoders(posnowT) * 100;
+			sprintf(str, "y: %d = %d \n", posnowT, angleT);
+			HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(str),
+					strlen(str),
+					HAL_MAX_DELAY);
+
+		}
+
+		osDelay(200);
 	}
 	/* USER CODE END StartUARTData */
 }
@@ -675,7 +663,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	{
 		++cntImpulse1;
 
-		if (cntImpulse1 >= step1) {
+		if (cntImpulse1 >= arm.anglePsteps) {
 			//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
 			HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
 			HAL_TIM_Base_Stop_IT(&htim1);
@@ -686,8 +674,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		++cntImpulse2;
 		//HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
-		if (cntImpulse2 >= step2) {
-			//	HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
+		if (cntImpulse2 >= arm.distPsteps) {
+			//		HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
 			HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
 			HAL_TIM_Base_Stop_IT(&htim2);
 
