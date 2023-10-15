@@ -64,20 +64,20 @@
 ../Core/Src/TMC2209.cpp:599:6:bool TMC2209::serialOperationMode()	24	static
 ../Core/Src/TMC2209.cpp:606:6:void TMC2209::minimizeMotorCurrent()	16	static
 ../Core/Src/TMC2209.cpp:612:10:uint32_t TMC2209::reverseData(uint32_t)	24	static
-../Core/Src/TMC2209.cpp:694:6:void TMC2209::write(uint8_t, uint32_t)	32	static
-../Core/Src/TMC2209.cpp:706:10:uint32_t TMC2209::read(uint8_t)	80	static
-../Core/Src/TMC2209.cpp:743:9:uint8_t TMC2209::percentToCurrentSetting(uint8_t)	32	static
-../Core/Src/TMC2209.cpp:750:9:uint8_t TMC2209::currentSettingToPercent(uint8_t)	32	static
-../Core/Src/TMC2209.cpp:756:9:uint8_t TMC2209::map(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t)	16	static
-../Core/Src/TMC2209.cpp:760:9:uint8_t TMC2209::percentToHoldDelaySetting(uint8_t)	32	static
-../Core/Src/TMC2209.cpp:766:9:uint8_t TMC2209::holdDelaySettingToPercent(uint8_t)	32	static
-../Core/Src/TMC2209.cpp:771:6:void TMC2209::writeStoredGlobalConfig()	16	static
-../Core/Src/TMC2209.cpp:775:10:uint32_t TMC2209::readGlobalConfigBytes()	16	static
-../Core/Src/TMC2209.cpp:779:6:void TMC2209::writeStoredDriverCurrent()	16	static
-../Core/Src/TMC2209.cpp:792:6:void TMC2209::writeStoredChopperConfig()	16	static
-../Core/Src/TMC2209.cpp:796:10:uint32_t TMC2209::readChopperConfigBytes()	16	static
-../Core/Src/TMC2209.cpp:800:6:void TMC2209::writeStoredPwmConfig()	16	static
-../Core/Src/TMC2209.cpp:804:10:uint32_t TMC2209::readPwmConfigBytes()	16	static
+../Core/Src/TMC2209.cpp:692:6:void TMC2209::write(uint8_t, uint32_t)	32	static
+../Core/Src/TMC2209.cpp:704:10:uint32_t TMC2209::read(uint8_t)	80	static
+../Core/Src/TMC2209.cpp:741:9:uint8_t TMC2209::percentToCurrentSetting(uint8_t)	32	static
+../Core/Src/TMC2209.cpp:748:9:uint8_t TMC2209::currentSettingToPercent(uint8_t)	32	static
+../Core/Src/TMC2209.cpp:754:9:uint8_t TMC2209::map(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t)	16	static
+../Core/Src/TMC2209.cpp:758:9:uint8_t TMC2209::percentToHoldDelaySetting(uint8_t)	32	static
+../Core/Src/TMC2209.cpp:764:9:uint8_t TMC2209::holdDelaySettingToPercent(uint8_t)	32	static
+../Core/Src/TMC2209.cpp:769:6:void TMC2209::writeStoredGlobalConfig()	16	static
+../Core/Src/TMC2209.cpp:773:10:uint32_t TMC2209::readGlobalConfigBytes()	16	static
+../Core/Src/TMC2209.cpp:777:6:void TMC2209::writeStoredDriverCurrent()	16	static
+../Core/Src/TMC2209.cpp:790:6:void TMC2209::writeStoredChopperConfig()	16	static
+../Core/Src/TMC2209.cpp:794:10:uint32_t TMC2209::readChopperConfigBytes()	16	static
+../Core/Src/TMC2209.cpp:798:6:void TMC2209::writeStoredPwmConfig()	16	static
+../Core/Src/TMC2209.cpp:802:10:uint32_t TMC2209::readPwmConfigBytes()	16	static
 ../Core/Src/TMC2209.cpp:625:9:uint8_t TMC2209::calculateCrc(Datagram&, uint8_t) [with Datagram = TMC2209::WriteReadReplyDatagram]	40	static
 ../Core/Src/TMC2209.cpp:643:6:void TMC2209::sendDatagramUnidirectional(Datagram&, uint8_t) [with Datagram = TMC2209::WriteReadReplyDatagram]	48	static
 ../Core/Src/TMC2209.cpp:625:9:uint8_t TMC2209::calculateCrc(Datagram&, uint8_t) [with Datagram = TMC2209::ReadRequestDatagram]	32	static

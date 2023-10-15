@@ -75,8 +75,8 @@ all: main-build
 main-build: uartok.elf secondary-outputs
 
 # Tool invocations
-uartok.elf uartok.map: $(OBJS) $(USER_OBJS) C:\Users\admin\STM32CubeIDE\aawork\uartok\STM32F103C6TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "uartok.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\admin\STM32CubeIDE\aawork\uartok\STM32F103C6TX_FLASH.ld" -Wl,-Map="uartok.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+uartok.elf uartok.map: $(OBJS) $(USER_OBJS) C:\Users\admin\Documents\aelrepos\roboT\tmcuart\uartok\STM32F103C6TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "uartok.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\admin\Documents\aelrepos\roboT\tmcuart\uartok\STM32F103C6TX_FLASH.ld" -Wl,-Map="uartok.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

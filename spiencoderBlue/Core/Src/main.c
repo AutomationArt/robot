@@ -102,22 +102,20 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 	uint16_t posnow = 0;
 
-	HAL_TIM_Base_Init(&htim2);
+	HAL_UART_Init(&huart1);
 
+	HAL_TIM_Base_Init(&htim2);
 	HAL_Delay(300); //при старте 200 милисек не хотел ебать?
 
 	posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 12, &htim2);
-	треба зчитати
-	позицію на
-	всяк випадок
 
 	resetAMT22(&hspi1, CS_GPIO_Port, CS_Pin, &htim2);
 	setZeroSPI(&hspi1, CS_GPIO_Port, CS_Pin, &htim2); //воно само зчитає поточну позицію и засейвить її в пам'ять
 
 	HAL_Delay(250);  //250 мілісек після встановлення нуля полюбасу
 
-//  char buf[4];
-//  char bufAngle[10];
+  char buf[4];
+  char bufAngle[10];
 
 	/* USER CODE END 2 */
 	float angle = 0;
@@ -128,11 +126,11 @@ int main(void) {
 		posnow = getPositionSPI(&hspi1, CS_GPIO_Port, CS_Pin, 12, &htim2);
 		angle = calculateAngle(posnow, 12); //або 14
 
-//  sprintf(buf, "%hu\n", posnow);
-//  HAL_UART_Transmit(&huart1, (uint8_t *)buf, sizeof(buf),0xFFFF);
-//  sprintf(bufAngle, "%.2f", angle);
-//  strcat(bufAngle, "\n");
-//  HAL_UART_Transmit(&huart1, (uint8_t *)bufAngle, sizeof(bufAngle),0xFFFF);
+  sprintf(buf, "%hu\n", posnow);
+  HAL_UART_Transmit(&huart1, (uint8_t *)buf, sizeof(buf),0xFFFF);
+  sprintf(bufAngle, "%.2f", angle);
+  strcat(bufAngle, "\n");
+  HAL_UART_Transmit(&huart1, (uint8_t *)bufAngle, sizeof(bufAngle),0xFFFF);
 
 		HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin); //просто як індикатор
 
