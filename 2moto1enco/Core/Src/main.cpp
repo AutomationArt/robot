@@ -60,16 +60,10 @@ uint8_t rx_data[20];
 uint8_t rx_buffer[9];
 uint8_t transfer_cplt = 0;
 
+bool startMove=false;
+uint16_t recAngle=0;
+uint16_t recDist=0;
 bool flagReadEnc = 0;
-
-struct StateStr {
-	uint32_t angleEnc1 :3;
-	uint32_t angleEnc2 :3;
-	uint32_t posEnc1 :5;
-	uint32_t posEnc2 :4;
-	uint32_t stallguard :4;
-	uint32_t drv_temp :3;
-};
 
 /* USER CODE END PV */
 
@@ -194,9 +188,6 @@ int main(void) {
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
 
-	HAL_GPIO_WritePin(Dir_GPIO_Port, Dir_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(Dir2_GPIO_Port, Dir2_Pin, GPIO_PIN_SET);
-
 	HAL_TIM_Base_Init(&htim1);
 	HAL_TIM_Base_Init(&htim2);
 
@@ -251,22 +242,6 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 
 	while (1) {
-
-//	  sprintf(buf, "%hu\n", posnow);
-//	  HAL_UART_Transmit(&huart1, (uint8_t *)buf, sizeof(buf),0xFFFF);
-//	  sprintf(bufAngle, "%.2f", angle);
-//	  strcat(bufAngle, "\n");
-//	  HAL_UART_Transmit(&huart1, (uint8_t *)bufAngle, sizeof(bufAngle),0xFFFF);
-
-//	  char buf[20];
-//	    snprintf(buf, sizeof(buf), "%hu - %.2f\n\r", posnow, angle);
-//
-//	    /* Отправляем данные в UART. */
-//	    HAL_UART_Transmit(&huart1, (uint8_t *)buf, strlen(buf), HAL_MAX_DELAY);
-
-		//	HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin); //просто як індикатор/
-
-//		HAL_Delay(100);
 
 		/* USER CODE END WHILE */
 
@@ -547,25 +522,19 @@ static void MX_GPIO_Init(void) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	//UNUSED(huart);
-
 	if (huart == &huart1) {
-
 //		if(!strcmp(rx_buffer,"TEXT")) {
 //
 //		}
-
 		if (rx_buffer[0] == '1') {
-
-			uint32_t recAngle = ((rx_buffer[1] - '0') * 100)
+			recAngle = ((rx_buffer[1] - '0') * 100)
 					+ ((rx_buffer[2] - '0') * 10) + (rx_buffer[3] - '0');
-			uint32_t recDist = ((rx_buffer[4] - '0') * 100)
+			recDist = ((rx_buffer[4] - '0') * 100)
 					+ ((rx_buffer[5] - '0') * 10) + (rx_buffer[6] - '0');
 			HAL_UART_Transmit_IT(&huart1, rx_buffer, 8);
-
 			//	HAL_UART_Transmit_IT(&huart1,reinterpret_cast<uint8_t *>(recDist), sizeof(recDist));
-			arm.setMove(recAngle, recDist, false);
+			startMove=true;
 		}
-
 		memset(rx_buffer, 0, sizeof(rx_buffer));
 	}
 	HAL_UART_Receive_IT(&huart1, rx_buffer, sizeof(rx_buffer));
@@ -582,9 +551,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const *argument) {
 	/* USER CODE BEGIN 5 */
-
+	arm.setPrintState(true);
 	/* Infinite loop */
 	for (;;) {
+
+		if(startMove) {
+			startMove=false;
+			arm.Move2MotorsSimu(recAngle, recDist);
+		}
+
+
 		osDelay(1);
 	}
 	/* USER CODE END 5 */
@@ -602,6 +578,8 @@ void StartAMT22Data(void const *argument) {
 
 	/* Infinite loop */
 	for (;;) {
+
+
 
 		osDelay(50);
 	}
@@ -668,6 +646,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
 			HAL_TIM_Base_Stop_IT(&htim1);
 			//	HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
+
+			cntImpulse1=0;
+			arm.stateMoveM1=false;
+
 		}
 
 	} else if (htim->Instance == TIM2) {
@@ -678,6 +660,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			//		HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
 			HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
 			HAL_TIM_Base_Stop_IT(&htim2);
+
+			cntImpulse2=0;
+			arm.stateMoveM1=false;
 
 		}
 	} else if (htim->Instance == TIM4) {

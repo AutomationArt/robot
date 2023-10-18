@@ -35,8 +35,81 @@ int RoboArm::EmergencyStop() {
 	return 0;
 }
 
-int RoboArm::setMove(uint32_t angle, uint32_t distance) {
-//m0
+int RoboArm::correctPosition() {
+
+	float actualAngle=GetAngleEncoders(GetPosEncoders(1)); //angle
+	uint16_t actualDistance = (GetAngleEncoders(GetPosEncoders(2)) * 6.45) / (linearStepsMil * 360 / (motorStep * drvMicroSteps * 100));
+
+	if (lastPosAngle < actualAngle) {
+		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_SET);
+	} else {
+		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_RESET);
+	}
+
+	if (lastPosLinear < actualDistance) {
+		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_SET);
+	} else {
+		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_RESET);
+	}
+
+ float difAngle=abs(actualAngle-lastPosAngle);  //різниця між поточним кутом та попередньо встановленим
+ uint16_t difDistance=abs(actualDistance-lastPosLinear); //різниця між поточним положенням в міліметрах та попередньо встановленним
+
+ anglePsteps = (difAngle * (8 * motorStep * drvMicroSteps)) / 360; //angle to steps
+ distPsteps = difDistance * linearStepsMil;
+
+ 	HAL_TIM_PWM_Stop(htim1M1, TIM_CHANNEL_3);
+ 	HAL_TIM_PWM_Stop(htim2M2, TIM_CHANNEL_3);
+ 	HAL_TIM_Base_Stop_IT(htim1M1);
+ 	HAL_TIM_Base_Stop_IT(htim2M2);
+
+ //  частота шим = входящая частота / период (arr)
+ //  125 000 (125 килогерц)  = 16 000 000 / 128
+ // (1/60)*1000 = частота 16 (герц);
+ 	float periodM1 = 1200; //мікросекунд
+ 	uint32_t psc = 24;
+
+ 	if (anglePsteps > distPsteps) {
+
+ 		htim1M1->Instance->PSC = psc;
+ 		htim1M1->Instance->ARR = periodM1;
+ 		htim1M1->Instance->CCR3 = periodM1 / 2;
+
+ 		float delimiter = anglePsteps / distPsteps;
+ 		float mnoj = ceil(periodM1 * delimiter);
+
+ 		htim2M2->Instance->PSC = psc;
+ 		htim2M2->Instance->ARR = mnoj;
+ 		htim2M2->Instance->CCR3 = ceil(mnoj / 2);
+
+ 	} else {
+
+ 		htim2M2->Instance->PSC = psc;
+ 		htim2M2->Instance->ARR = periodM1;
+ 		htim2M2->Instance->CCR3 = periodM1 / 2;
+
+ 		float delimiter = distPsteps / anglePsteps;
+ 		float mnoj = ceil(periodM1 * delimiter);
+
+ 		htim1M1->Instance->PSC = psc;
+ 		htim1M1->Instance->ARR = mnoj;
+ 		htim1M1->Instance->CCR3 = ceil(mnoj / 2);
+ 	}
+
+	stateMoveM1=true;
+	stateMoveM2=true;
+
+ 	HAL_TIM_Base_Start_IT(htim1M1);
+ 	HAL_TIM_Base_Start_IT(htim2M2);
+ 	HAL_TIM_PWM_Start(htim1M1, TIM_CHANNEL_3);
+ 	HAL_TIM_PWM_Start(htim2M2, TIM_CHANNEL_3);
+
+return 0;
+
+}
+
+int RoboArm::Move2MotorsSimu(float angle, uint16_t distance) {
+	//m0
 	// TIM1 Х  enc1 -  угол 360  -  8 оборотов движка на 1 оборот энкодера
 	// TIM2  Y  enc2 - линейный -  6,4516129 оборотов движка (это целое линейное перемещение с запасом) на 1 оборот энкодера
 	// 5 мм - 7.1 градусов
@@ -46,16 +119,21 @@ int RoboArm::setMove(uint32_t angle, uint32_t distance) {
 	// 80 мм - 111.01
 	// 230 мм - 321.68
 
+	HAL_TIM_PWM_Stop(htim1M1, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Stop(htim2M2, TIM_CHANNEL_3);
+	HAL_TIM_Base_Stop_IT(htim1M1);
+	HAL_TIM_Base_Stop_IT(htim2M2);
+
 	if (lastPosAngle < angle) {
 		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_SET);
-	} else {
+	} else if (lastPosAngle > angle) {
 		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_RESET);
 	}
 
 	if (lastPosLinear < distance) {
 		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_SET);
-	} else {
-		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir1_Pin_M2, GPIO_PIN_RESET);
+	} else if (lastPosLinear > distance){
+		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_RESET);
 	}
 
     uint32_t actualPosAngle = abs(lastPosAngle-angle);
@@ -67,20 +145,18 @@ int RoboArm::setMove(uint32_t angle, uint32_t distance) {
 	uint32_t distPangle = ((distPsteps / (motorStep * drvMicroSteps)) * 360
 			/ 6.45) * 100;
 
-//step1 = anglePsteps;
-//step2 = distPsteps;
+	lastPosAngle=angle;
+	lastPosLinear=distance;
 
 //числа 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36 и 72 - Це можлива обрана максимальна швидкість для мотора з більшої кількістю кроків. Це дільник таймера
-	HAL_TIM_PWM_Stop(htim1M1, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Stop(htim2M2, TIM_CHANNEL_3);
-	HAL_TIM_Base_Stop_IT(htim1M1);
-	HAL_TIM_Base_Stop_IT(htim2M2);
+
 
 //  частота шим = входящая частота / период (arr)
 //  125 000 (125 килогерц)  = 16 000 000 / 128
 // (1/60)*1000 = частота 16 (герц);
-	float periodM1 = 1200; //мікросекунд
-	uint32_t psc = 24;
+	float periodM1 = 600; //мікросекунд
+	uint32_t psc = 72;
+	float mnoj=0;
 
 	if (anglePsteps > distPsteps) {
 
@@ -88,8 +164,7 @@ int RoboArm::setMove(uint32_t angle, uint32_t distance) {
 		htim1M1->Instance->ARR = periodM1;
 		htim1M1->Instance->CCR3 = periodM1 / 2;
 
-		float delimiter = anglePsteps / distPsteps;
-		float mnoj = ceil(periodM1 * delimiter);
+		mnoj = ceil(periodM1 * (anglePsteps / distPsteps));
 
 		htim2M2->Instance->PSC = psc;
 		htim2M2->Instance->ARR = mnoj;
@@ -106,8 +181,7 @@ int RoboArm::setMove(uint32_t angle, uint32_t distance) {
 		htim2M2->Instance->ARR = periodM1;
 		htim2M2->Instance->CCR3 = periodM1 / 2;
 
-		float delimiter = distPsteps / anglePsteps;
-		float mnoj = ceil(periodM1 * delimiter);
+		mnoj = ceil(periodM1 * (anglePsteps / distPsteps));
 
 		htim1M1->Instance->PSC = psc;
 		htim1M1->Instance->ARR = mnoj;
@@ -116,9 +190,12 @@ int RoboArm::setMove(uint32_t angle, uint32_t distance) {
 
 //Старт таймера та переривань
 
+	stateMoveM1=true;
+	stateMoveM2=true;
+
 	HAL_TIM_Base_Start_IT(htim1M1);
 	HAL_TIM_Base_Start_IT(htim2M2);
-
+	 HAL_Delay(2);
 	HAL_TIM_PWM_Start(htim1M1, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(htim2M2, TIM_CHANNEL_3);
 
@@ -129,10 +206,6 @@ int RoboArm::factoryReset() {
 	SetZeroEncoders();
 	posNowAngle = defaultAngle;
 	posNowDistance = 124;
-}
-
-int RoboArm::MoveMotors() {
-	return 0;
 }
 
 int RoboArm::OpenGripper() {
@@ -155,6 +228,14 @@ bool RoboArm::getPrintState() {
 		return false;
 	}
 }
+
+int RoboArm::cringeFunction(bool state){
+
+	stateMovement[0]=stateMovement[1];
+	stateMovement[1]=state;
+
+}
+
 
 int RoboArm::SetSettEncoders(SPI_HandleTypeDef &arm_hspi1T,
 		GPIO_TypeDef *CS_GPIO_Port_Enc1T, uint16_t CS_Pin_Enc1T,
@@ -228,6 +309,13 @@ int RoboArm::SetSettMotors(TIM_HandleTypeDef &htim1, TIM_HandleTypeDef &htim2,
 	return 0;
 }
 
-int RoboArm::Turn(int angle) {
+int RoboArm::MoveAngle(uint16_t angle) {
+
 	return 0;
 }
+
+int RoboArm::MoveDistanse(uint16_t angle) {
+
+	return 0;
+}
+

@@ -18,6 +18,7 @@ C_SRCS += \
 
 CPP_SRCS += \
 ../Core/Src/RoboArm.cpp \
+../Core/Src/TMC2209.cpp \
 ../Core/Src/main.cpp 
 
 C_DEPS += \
@@ -36,6 +37,7 @@ OBJS += \
 ./Core/Src/AMT22.o \
 ./Core/Src/DWT_Delay.o \
 ./Core/Src/RoboArm.o \
+./Core/Src/TMC2209.o \
 ./Core/Src/freertos.o \
 ./Core/Src/main.o \
 ./Core/Src/moveSettings.o \
@@ -48,6 +50,7 @@ OBJS += \
 
 CPP_DEPS += \
 ./Core/Src/RoboArm.d \
+./Core/Src/TMC2209.d \
 ./Core/Src/main.d 
 
 
@@ -60,7 +63,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.cpp Core/Src/subdir.m
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/AMT22.cyclo ./Core/Src/AMT22.d ./Core/Src/AMT22.o ./Core/Src/AMT22.su ./Core/Src/DWT_Delay.cyclo ./Core/Src/DWT_Delay.d ./Core/Src/DWT_Delay.o ./Core/Src/DWT_Delay.su ./Core/Src/RoboArm.cyclo ./Core/Src/RoboArm.d ./Core/Src/RoboArm.o ./Core/Src/RoboArm.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/moveSettings.cyclo ./Core/Src/moveSettings.d ./Core/Src/moveSettings.o ./Core/Src/moveSettings.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_hal_timebase_tim.cyclo ./Core/Src/stm32f1xx_hal_timebase_tim.d ./Core/Src/stm32f1xx_hal_timebase_tim.o ./Core/Src/stm32f1xx_hal_timebase_tim.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
+	-$(RM) ./Core/Src/AMT22.cyclo ./Core/Src/AMT22.d ./Core/Src/AMT22.o ./Core/Src/AMT22.su ./Core/Src/DWT_Delay.cyclo ./Core/Src/DWT_Delay.d ./Core/Src/DWT_Delay.o ./Core/Src/DWT_Delay.su ./Core/Src/RoboArm.cyclo ./Core/Src/RoboArm.d ./Core/Src/RoboArm.o ./Core/Src/RoboArm.su ./Core/Src/TMC2209.cyclo ./Core/Src/TMC2209.d ./Core/Src/TMC2209.o ./Core/Src/TMC2209.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/moveSettings.cyclo ./Core/Src/moveSettings.d ./Core/Src/moveSettings.o ./Core/Src/moveSettings.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_hal_timebase_tim.cyclo ./Core/Src/stm32f1xx_hal_timebase_tim.d ./Core/Src/stm32f1xx_hal_timebase_tim.o ./Core/Src/stm32f1xx_hal_timebase_tim.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
 
 .PHONY: clean-Core-2f-Src
 
