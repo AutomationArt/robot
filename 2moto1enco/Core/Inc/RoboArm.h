@@ -17,29 +17,27 @@
 #define motorStep 200
 #define beltRatio 2
 
-class RoboArm
-{
+class RoboArm {
 public:
 
-	float linearStepsMil=motorStep*drvMicroSteps/( beltRatio*spoolStep);
+	float linearStepsMil = motorStep * drvMicroSteps / ( beltRatio * spoolStep);
 	//Settings for moto/rs
 	TIM_HandleTypeDef *htim1M1;
 	TIM_HandleTypeDef *htim2M2;
 
-	GPIO_TypeDef * Dir1_GPIO_Port_M1;
+	GPIO_TypeDef *Dir1_GPIO_Port_M1;
 	uint16_t Dir1_Pin_M1;
-	GPIO_TypeDef * Dir2_GPIO_Port_M2;
+	GPIO_TypeDef *Dir2_GPIO_Port_M2;
 	uint16_t Dir2_Pin_M2;
-	GPIO_TypeDef * EN1_GPIO_Port_M1;
+	GPIO_TypeDef *EN1_GPIO_Port_M1;
 	uint16_t EN1_Pin_M1;
-	GPIO_TypeDef * EN2_GPIO_Port_M2;
+	GPIO_TypeDef *EN2_GPIO_Port_M2;
 	uint16_t EN2_Pin_M2;
 
-	uint16_t distPsteps=0,anglePsteps=0;
-
+	float distPsteps = 0, anglePsteps = 0;
 
 	//ENCODERS
-	uint8_t ResolutionEncoders=14;
+	uint8_t ResolutionEncoders = 14;
 	SPI_HandleTypeDef *arm_hspi1;
 	uint16_t CS_Pin_Enc1;
 	GPIO_TypeDef *CS_GPIO_Port_Enc1;
@@ -54,7 +52,7 @@ public:
 	//entity
 	float posNowAngle;
 	uint16_t posNowDistance;
-	bool stateMoveM1=false, stateMoveM2=false;
+	bool stateMoveM1 = false, stateMoveM2 = false;
 	uint16_t defaultAngle, defaultDistanse; //стандартний кут //0 120 240 та дистанція 124 мм
 	bool stateMovement[2];
 
@@ -70,17 +68,23 @@ public:
 			GPIO_TypeDef *CS_GPIO_Port_Enc1T, uint16_t CS_Pin_Enc1T,
 			GPIO_TypeDef *CS_GPIO_Port_Enc2T, uint16_t CS_Pin_Enc2T,
 			uint8_t ResolutionEncodersT);     //settings for encoders
-	uint32_t GetPosEncoders(uint8_t); 		  //get actually position encoders 1 or 2
+	uint32_t GetPosEncoders(uint8_t); 	//get actually position encoders 1 or 2
 	int SetZeroEncoders();					  //set zero position all encoders
 	float GetAngleEncoders(uint32_t);	      //get calculated Angle - pos value
 	uint32_t GetPosTactEncoders(uint32_t);	  //get calculated position
-
 
 	int setPrintState(bool); // flag to send status to uart
 	bool getPrintState();
 
 	int EmergencyStop();
-	int SetSettMotors(TIM_HandleTypeDef &htim1, TIM_HandleTypeDef &htim2, GPIO_TypeDef * Dir1_GPIO_Port_M1T, uint16_t Dir1_Pin_M1T, GPIO_TypeDef * Dir2_GPIO_Port_M2T, uint16_t Dir2_Pin_M2T, GPIO_TypeDef * EN1_GPIO_Port_M1T, uint16_t EN1_Pin_M1T, GPIO_TypeDef *  EN2_GPIO_Port_M2T, uint16_t EN2_Pin_M2T);
+	int SetSettMotors(TIM_HandleTypeDef &htim1, TIM_HandleTypeDef &htim2,
+			GPIO_TypeDef *Dir1_GPIO_Port_M1T, uint16_t Dir1_Pin_M1T,
+			GPIO_TypeDef *Dir2_GPIO_Port_M2T, uint16_t Dir2_Pin_M2T,
+			GPIO_TypeDef *EN1_GPIO_Port_M1T, uint16_t EN1_Pin_M1T,
+			GPIO_TypeDef *EN2_GPIO_Port_M2T, uint16_t EN2_Pin_M2T);
+
+	int SetEnable(uint16_t numMotor, bool state);
+
 	int saveDatatoFlash();
 	int readDataonFlash();
 	int checkPosition();
@@ -91,12 +95,12 @@ public:
 
 private:
 
-	bool PrintAllState=false;
+	bool PrintAllState = false;
 
 	// Данные о текущем положении моторов
-	uint16_t lastPosLinear=0;
-	float lastPosAngle=0;
-	bool lastPosGripper=false;
+	uint16_t lastPosLinear = 0;
+	float lastPosAngle = 0;
+	bool lastPosGripper = false;
 };
 
 #endif /* ROBOARM_H_ */

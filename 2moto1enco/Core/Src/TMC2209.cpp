@@ -5,7 +5,6 @@
 #include "TMC2209.h"
 #include "main.h"
 
-
 TMC2209::TMC2209() {
 	serial_baud_rate_ = 115200;
 	serial_address_ = SERIAL_ADDRESS_3;
