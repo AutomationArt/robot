@@ -31,18 +31,18 @@ int RoboArm::correctPosition() {
 
 	float actualAngle = GetAngleEncoders(GetPosEncoders(1)); //angle
 	uint16_t actualDistance = (GetAngleEncoders(GetPosEncoders(2)) * 6.45)
-			/ (linearStepsMil * 360 / (motorStep * drvMicroSteps * 100));
+			/ (linearStepsMil * 360 / (motorStep * drvMicroSteps));
 
 	if (lastPosAngle < actualAngle) {
-		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_SET);
-	} else {
 		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_RESET);
+	} else {
+		HAL_GPIO_WritePin(Dir1_GPIO_Port_M1, Dir1_Pin_M1, GPIO_PIN_SET);
 	}
 
 	if (lastPosLinear < actualDistance) {
-		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_SET);
-	} else {
 		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_RESET);
+	} else {
+		HAL_GPIO_WritePin(Dir2_GPIO_Port_M2, Dir2_Pin_M2, GPIO_PIN_SET);
 	}
 
 	float difAngle = abs(actualAngle - lastPosAngle); //різниця між поточним кутом та попередньо встановленим
@@ -51,8 +51,8 @@ int RoboArm::correctPosition() {
 	anglePsteps = (difAngle * (8 * motorStep * drvMicroSteps)) / 360; //angle to steps
 	distPsteps = difDistance * linearStepsMil;
 
-	lastPosAngle = actualAngle;
-	lastPosLinear = actualDistance;
+//	lastPosAngle = actualAngle;
+//	lastPosLinear = actualDistance;
 
 // 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36 и 72 - Це можлива обрана максимальна швидкість для мотора з більшої кількістю кроків. Це дільник таймера
 
@@ -115,6 +115,8 @@ int RoboArm::Move2MotorsSimu(float angle, uint16_t distance) {
 	HAL_TIM_Base_Stop_IT(htim1M1);				// остановили прерывание таймеров
 	HAL_TIM_Base_Stop_IT(htim2M2);
 
+	SetEnable(1, false);
+	SetEnable(2, false);
 	/* выставили в каку сторону ехать мотору*/
 
 	if (lastPosAngle < angle) {
@@ -134,8 +136,8 @@ int RoboArm::Move2MotorsSimu(float angle, uint16_t distance) {
 	anglePsteps = (actualPosAngle * (8 * motorStep * drvMicroSteps)) / 360; //angle to steps
 	distPsteps = actualPosDistance * linearStepsMil; //steps to distanse
 
-	uint32_t distPangle = ((distPsteps / (motorStep * drvMicroSteps)) * 360
-			/ 6.45) * 100;
+	float distPangle = ((distPsteps / (motorStep * drvMicroSteps)) * 360
+			/ 6.45);
 
 	lastPosAngle = angle;
 	lastPosLinear = distance;
@@ -143,7 +145,7 @@ int RoboArm::Move2MotorsSimu(float angle, uint16_t distance) {
 // 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36 и 72 - Це можлива обрана максимальна швидкість для мотора з більшої кількістю кроків. Це дільник таймера
 
 	float periodM1 = 1200;
-	uint32_t psc = 72;
+	uint32_t psc = 72-1;
 
 	float delimiter=1;
 	float mnoj=1;
