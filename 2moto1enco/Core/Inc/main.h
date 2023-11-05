@@ -70,10 +70,6 @@ void Error_Handler(void);
 #define Led_GPIO_Port GPIOC
 #define En_Pin GPIO_PIN_5
 #define En_GPIO_Port GPIOA
-
-#define En2_Pin GPIO_PIN_11
-#define En2_GPIO_Port GPIOA
-
 #define Dir_Pin GPIO_PIN_6
 #define Dir_GPIO_Port GPIOA
 #define CS_Pin GPIO_PIN_0
@@ -82,6 +78,8 @@ void Error_Handler(void);
 #define CS2_GPIO_Port GPIOB
 #define Dir2_Pin GPIO_PIN_10
 #define Dir2_GPIO_Port GPIOB
+#define En2_Pin GPIO_PIN_11
+#define En2_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

@@ -63,13 +63,13 @@ void setZeroSPI(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 float calculateAngle(uint16_t encoderValue, uint8_t bitDepth) {
 	float angle = 0.0;
 	if (bitDepth == 12) {
-		angle = ((float) encoderValue * 360)/ ENCODER_RESOLUTION_12_BIT;
+		angle = ((float) encoderValue * 360.00)/ ENCODER_RESOLUTION_12_BIT;
 	} else if (bitDepth == 14) {
-		angle = ((float) encoderValue * 360)/ ENCODER_RESOLUTION_14_BIT;
+		angle = ((float) encoderValue * 360.00)/ ENCODER_RESOLUTION_14_BIT;
 	}
 
 	// до 0.2 градусів за документацією
-	angle = roundf(angle * 100.0) / 100.0;
+	//angle = roundf(angle * 100.0) / 100.0;
 	return angle;
 }
 
@@ -85,7 +85,7 @@ void resetAMT22(SPI_HandleTypeDef *hspi, GPIO_TypeDef *encoderPort,
 //блокуючий хуйовий метод, треба через неблокуючий мабуть
 void delay(uint32_t delayTime) {
 
-	DWT_Delay_ms(delayTime);
+	DWT_Delay_us(delayTime);
 
 //
 //	__HAL_RCC_TIM2_CLK_ENABLE();

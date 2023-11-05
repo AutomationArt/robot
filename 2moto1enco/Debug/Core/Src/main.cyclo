@@ -1,18 +1,17 @@
 C:\ST\STM32CubeIDE_1.11.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/cmath:165:3:constexpr float std::ceil(float)	1
-../Core/Src/main.cpp:94:5:int steppingyaktreba(float, float)	1
 ../Core/Src/main.cpp:99:5:int steppingyakkazavmaxim(float, float)	3
-../Core/Src/main.cpp:167:5:int main()	1
-../Core/Src/main.cpp:281:6:void SystemClock_Config()	3
-../Core/Src/main.cpp:322:13:void MX_SPI1_Init()	2
-../Core/Src/main.cpp:358:13:void MX_TIM1_Init()	5
-../Core/Src/main.cpp:421:13:void MX_TIM2_Init()	4
-../Core/Src/main.cpp:468:13:void MX_USART1_UART_Init()	2
-../Core/Src/main.cpp:499:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:547:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	3
-../Core/Src/main.cpp:582:6:void StartDefaultTask(const void*)	1
-../Core/Src/main.cpp:599:6:void StartAMT22Data(const void*)	1
-../Core/Src/main.cpp:617:6:void StartUARTData(const void*)	2
-../Core/Src/main.cpp:658:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	6
-../Core/Src/main.cpp:697:6:void Error_Handler()	1
-../Core/Src/main.cpp:704:1:void __static_initialization_and_destruction_0(int, int)	3
-../Core/Src/main.cpp:704:1:cpp)	1
+../Core/Src/main.cpp:169:5:int main()	1
+../Core/Src/main.cpp:265:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:309:13:void MX_SPI1_Init()	2
+../Core/Src/main.cpp:347:13:void MX_TIM1_Init()	5
+../Core/Src/main.cpp:412:13:void MX_TIM2_Init()	4
+../Core/Src/main.cpp:461:13:void MX_USART1_UART_Init()	2
+../Core/Src/main.cpp:494:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:542:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	3
+../Core/Src/main.cpp:575:6:void StartDefaultTask(const void*)	2
+../Core/Src/main.cpp:612:6:void StartAMT22Data(const void*)	1
+../Core/Src/main.cpp:632:6:void StartUARTData(const void*)	2
+../Core/Src/main.cpp:677:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	9
+../Core/Src/main.cpp:724:6:void Error_Handler()	1
+../Core/Src/main.cpp:732:1:void __static_initialization_and_destruction_0(int, int)	3
+../Core/Src/main.cpp:732:1:cpp)	1

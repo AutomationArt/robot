@@ -1,6 +1,7 @@
 "./Core/Src/AMT22.o"
 "./Core/Src/DWT_Delay.o"
 "./Core/Src/RoboArm.o"
+"./Core/Src/TMC2209.o"
 "./Core/Src/freertos.o"
 "./Core/Src/main.o"
 "./Core/Src/moveSettings.o"
